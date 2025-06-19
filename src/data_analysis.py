@@ -105,5 +105,5 @@ def plot_values_from_df(image_info, cols_to_plot, save_dir, title):
         )
 
     plt.tight_layout()
-    plt.savefig(f'{save_dir}/{title}.png')
+    plt.savefig(f'{save_dir}/{title}.png', dpi=300)
     plt.show()
