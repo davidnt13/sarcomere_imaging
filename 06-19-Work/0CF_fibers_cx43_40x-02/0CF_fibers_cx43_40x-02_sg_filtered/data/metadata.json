@@ -1,0 +1,15 @@
+{
+  "file_name": "0CF_fibers_cx43_40x-02_sg_filtered.tif",
+  "file_path": "c:\\Users\\dntim\\Desktop\\CELL-MET REU Project\\Code\\sarcomere_imaging\\06-19-Work\\0CF_fibers_cx43_40x-02\\0CF_fibers_cx43_40x-02_sg_filtered.tif",
+  "frames": 12,
+  "frametime": null,
+  "pixelsize": 0.312,
+  "size": [
+    512,
+    512
+  ],
+  "time": null,
+  "timestamp_analysis": "2025-06-19T11:00:26.988897",
+  "timestamps": null,
+  "version": "0.1.7"
+}

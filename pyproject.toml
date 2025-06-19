@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sarc-imaging"
+version = "0.0.0"
+authors = [
+  { name = "David Ntim" },
+  { name = "Javiera Jilberto", email = "jilberto@umich.edu" }
+]
+description = "Python scripts to analyze sarcomere images"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "numpy>=1.24.4,<2.0",
+  "matplotlib>=3.10.0,<4.0.0",
+  "scikit-image>=0.21.0",
+  "scikit-learn==1.6.1",
+  "packaging==24.0",
+  "dask==2025.2.0",
+  "pandas>=2.0.0,<3.0.0",
+  "networkx>=3.2,<4.0",
+  "scipy>=1.10.1,<2.0",
+  "trackpy>=0.6.4,<0.7.0",
+  "sk-video==1.1.10",
+  "sarc-asm==0.1.7"
+]
