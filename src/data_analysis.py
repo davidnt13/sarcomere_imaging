@@ -31,8 +31,6 @@ def create_statistics_df(original_image_dir, folders, pixel_size=0.312):
     for folder in folders:
 
         img_name = os.path.basename(os.path.normpath(folder))
-        print(img_name)
-        print(folder)
         sarcgraph_csv_path = f'{folder}/sarcomeres.csv'
 
         parts = img_name.split('_')
