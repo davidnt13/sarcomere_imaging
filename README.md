@@ -4,7 +4,7 @@ Sarcomere imaging analysis
 # Installation
 1. Create an environment and activate it. If using conda:
 ```
-conda create -n sarc-env python=3.13.2
+conda create -n sarc-env python=3.11
 conda activate sarc-env
 ```
 If using venv
