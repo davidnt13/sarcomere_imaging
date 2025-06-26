@@ -19,7 +19,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "numpy>=1.24.4,<2.0",
+  "numpy>=1.25.2",
   "matplotlib>=3.10.0,<4.0.0",
   "scikit-image>=0.21.0",
   "scikit-learn==1.6.1",
@@ -30,5 +30,7 @@ dependencies = [
   "scipy>=1.10.1,<2.0",
   "trackpy>=0.6.4,<0.7.0",
   "sk-video==1.1.10",
-  "sarc-asm==0.1.7"
+  "sarc-asm==0.1.7",
+  "seaborn",
+  "nibabel"
 ]
