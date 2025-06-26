@@ -5,9 +5,9 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from skimage import io
 import seaborn as sns
-from src.nuclei_count import find_and_count_nuclei
+from nuclei_count import find_and_count_nuclei
 from scipy.stats import linregress
-from src.tissue_volume import find_myofibril_density_vol
+from tissue_volume import find_myofibril_density_vol
 
 
 def create_statistics_df(original_image_dir, folders, pixel_size=0.312):
