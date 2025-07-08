@@ -2,15 +2,21 @@
 Sarcomere imaging analysis
 
 # Installation
-1. Create an environment and activate it. If using conda:
+1. Create an environment and activate it.
+If using conda:
 ```
 conda create -n sarc-env python=3.11
 conda activate sarc-env
 ```
-If using venv
+If using venv and on Mac/Linux:
 ```
-python -m venv .venv
-source .venv/bin/activate
+python -m venv sarc-venv
+source sarc-venv/bin/activate
+```
+If using venv and on Windows:
+```
+python -m venv sarc-venv
+sarc-venv\Scripts\activate
 ```
 In VScode you can select the environment by using Ctrl+Shift+P, type Python Select Interpreter and selecting ```./venv/bin/python```.
 
@@ -23,8 +29,19 @@ cd sarcomere_imaging
 3. Install necessary packages and modules,
 ```
 python -m pip install -e .
+```
+And If Git is installed:
+```
 python -m pip install -r requirements.txt
 ```
+But If Git is not Installed:
+i. Go to https://github.com/davidnt13/SarcGraph
+ii. Click the green <> code button and select Download Zip
+iii. cd to the downloaded SarcGraph directory and install in editable mode:
+```
+pip install -e .
+```
+
 
 # Image Analysis Pipeline
 Once in the sarcomere_imaging directory, the main step is running the run_pipeline.py file.
