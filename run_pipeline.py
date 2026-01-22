@@ -35,6 +35,7 @@ def get_folder_and_date():
         result["date"] = date_var.get()
         result["save_folder"] = save_folder_var.get()
         result["num_img_channels"] = num_channels_var.get()
+        result["voxel_size"] = (pixel_size_x_var.get(), pixel_size_y_var.get(), pixel_size_z_var.get())
         result["stat_title"] = title_var.get()
         result["plot"] = plot_choice.get() == "Yes"
         result["cols"] = [col for col, var in checkbox_vars.items() if var.get()]
@@ -54,7 +55,7 @@ def get_folder_and_date():
 
     window = tk.Tk()
     window.title("Select Folder and Enter Date")
-    window.geometry("500x600")
+    window.geometry("600x700")
 
     # Folder selection
     folder_var = tk.StringVar()
@@ -77,6 +78,25 @@ def get_folder_and_date():
     num_channels_var = tk.IntVar(value=4)
     tk.Label(window, text="Enter Number of Image Channels:").pack(pady=(10, 0))
     tk.Entry(window, textvariable=num_channels_var).pack()
+    
+    # Pixel size inputs (microns)
+    pixel_size_x_var = tk.DoubleVar(value=0.312)
+    pixel_size_y_var = tk.DoubleVar(value=0.312)
+    pixel_size_z_var = tk.DoubleVar(value=2.56)
+    
+    tk.Label(window, text="Pixel Size (µm):").pack(pady=(10, 0))
+    
+    frame_pixel = tk.Frame(window)
+    frame_pixel.pack()
+    
+    tk.Label(frame_pixel, text="X:").grid(row=0, column=0, padx=5)
+    tk.Entry(frame_pixel, textvariable=pixel_size_x_var, width=8).grid(row=0, column=1)
+    
+    tk.Label(frame_pixel, text="Y:").grid(row=0, column=2, padx=5)
+    tk.Entry(frame_pixel, textvariable=pixel_size_y_var, width=8).grid(row=0, column=3)
+    
+    tk.Label(frame_pixel, text="Z:").grid(row=0, column=4, padx=5)
+    tk.Entry(frame_pixel, textvariable=pixel_size_z_var, width=8).grid(row=0, column=5)
 
     # Stats sheet title
     title_var = tk.StringVar()
@@ -109,7 +129,7 @@ def get_folder_and_date():
     window.mainloop()
 
     return (result["folder"], result["date"], result["save_folder"],
-            result["num_img_channels"], result["stat_title"], result["plot"], result["cols"])
+            result["num_img_channels"], result["voxel_size"], result["stat_title"], result["plot"], result["cols"])
 
 
 def save_specific_files(file_names, original_directory, new_directory):
@@ -131,9 +151,11 @@ def save_specific_files(file_names, original_directory, new_directory):
 
 if __name__ == "__main__":
 
-    data_dir, date, save_folder, num_img_channels, stat_title, plot_data, cols_to_plot = get_folder_and_date()
+    data_dir, date, save_folder, num_img_channels, pixel_dims, stat_title, plot_data, cols_to_plot = get_folder_and_date()
 
     if date is None: date = 'Output'
+    
+    pixel_x, pixel_y, pixel_z = pixel_dims
 
     data_dir_path = Path(data_dir)
     files = [f.name for f in data_dir_path.glob('*.tif') if 'MAX' not in f.name]
@@ -158,7 +180,7 @@ if __name__ == "__main__":
 
             # Getting the Sarcasm Z-Bands Mask
             _, zbands_mask = compute_sarcasm(filepath=filter_image_path, save_path=image_save_path, \
-                                            filters_used=filter_string, visualize=False)
+                                            filters_used=filter_string, visualize=False, pixel_size=pixel_x)
             
             # Computing the SarcGraph with the Z-Bands Mask from SarcAsM
             sg, sarcs, zdiscs = compute_sarcgraph(input_image=zbands_mask, save_path=image_save_path, 
@@ -175,7 +197,7 @@ if __name__ == "__main__":
     data_folders = [os.path.join(overall_save_directory, name) for name in os.listdir(overall_save_directory)
               if os.path.isdir(os.path.join(overall_save_directory, name))]
     print(data_folders)
-    data_statistics = create_statistics_df(original_image_dir=data_dir, folders=data_folders, num_channels=num_img_channels)
+    data_statistics = create_statistics_df(original_image_dir=data_dir, folders=data_folders, num_channels=num_img_channels, pixel_size=pixel_x, pixel_size_z=pixel_z)
     data_statistics.to_csv(f'{overall_save_directory}/image_analysis_{stat_title}.csv')
 
     if plot_data:

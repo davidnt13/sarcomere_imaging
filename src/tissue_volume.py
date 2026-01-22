@@ -26,7 +26,7 @@ def separate_channels_and_save(data, save_path='', num_channels=4):
 
     return channels_stack
 
-def find_tissue_vol(image, thresh_mult=0.1, num_channels=4):
+def find_tissue_vol(image, thresh_mult=0.1, num_channels=4, pixel_size=0.312, pixel_size_z=2.56):
     channels_stack = separate_channels_and_save(image, '', num_channels=num_channels)
 
     masks = []
@@ -51,14 +51,12 @@ def find_tissue_vol(image, thresh_mult=0.1, num_channels=4):
     # nib.save(nii_image, './10_combined_mask2.nii')
 
     pixel_vol_count = np.count_nonzero(combined_mask)
-    pixel_size = 0.312
-    pixel_size_z = 2.56
     vol_microns = pixel_vol_count * (pixel_size ** 2) * pixel_size_z
     
     print(f"Combined Volume: {vol_microns:.2f} µm³")
     return vol_microns
 
-def find_myofibril_volume(myofibril_mask):
+def find_myofibril_volume(myofibril_mask, pixel_size=0.312, pixel_size_z=2.56):
 
     myofibril_mask = np.clip(myofibril_mask, 0, 1)
     myofibril_mask = myofibril_mask > 0.1
@@ -73,17 +71,14 @@ def find_myofibril_volume(myofibril_mask):
     # nib.save(nii_image, './05_myofibril_mask.nii')
     
     myofibril_pixel_area_count = np.count_nonzero(myofibril_mask)
-
-    pixel_size = 0.312
-    pixel_size_z = 2.56
     myofibril_vol_microns = myofibril_pixel_area_count * (pixel_size ** 2) * (pixel_size_z)
     
     print(f"Myofibril volume: {myofibril_vol_microns:.2f} µm³")
     return myofibril_vol_microns
 
-def find_myofibril_density_vol(image, myofibril_mask, num_channels=4):
-    total_vol_in_microns = find_tissue_vol(image, num_channels=num_channels)
-    myofibril_vol_in_microns = find_myofibril_volume(myofibril_mask)
+def find_myofibril_density_vol(image, myofibril_mask, num_channels=4, pixel_size=0.312, pixel_size_z=2.56):
+    total_vol_in_microns = find_tissue_vol(image, num_channels=num_channels, pixel_size=pixel_size, pixel_size_z=pixel_size_z)
+    myofibril_vol_in_microns = find_myofibril_volume(myofibril_mask, pixel_size=pixel_size, pixel_size_z=pixel_size_z)
     density = myofibril_vol_in_microns / total_vol_in_microns
 
     print(f"Density: {density:.2f} µm³/µm³")

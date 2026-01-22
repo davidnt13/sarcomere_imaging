@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from sarcasm import *
 from skimage import io
 
-def compute_sarcasm(filepath, save_path, filters_used, visualize=True):
-    sarc = Structure(filepath, pixelsize=0.312, auto_save=True)
+def compute_sarcasm(filepath, save_path, filters_used, visualize=True, pixel_size=0.312):
+    sarc = Structure(filepath, pixelsize=pixel_size, auto_save=True)
     sarc.detect_sarcomeres(max_patch_size=(512, 512), clip_thres=(0,100))
     sarc.analyze_z_bands()
     sarc.analyze_sarcomere_vectors()#linewidth=0.9)

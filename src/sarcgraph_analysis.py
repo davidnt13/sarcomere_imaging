@@ -7,13 +7,18 @@ from skimage import io
 PIXEL_SIZE = 0.312
 MAX_LEN = 2.2/PIXEL_SIZE
 
-def compute_sarcgraph(input_image, save_path, filters_used, visualize=True):
+def compute_sarcgraph(input_image, save_path, filters_used, visualize=True, pixel_size=0.312):
     if input_image.ndim == 2:
         input_image = input_image[np.newaxis, ...]
+    
+    if pixel_size != PIXEL_SIZE:
+        max_len = 2.2/pixel_size
+    else:
+        max_len = MAX_LEN
 
     save_dir = f'{save_path}_{filters_used}_sarcgraph_output'
     sg = SarcGraph(save_output=True, input_type='image', output_dir=save_dir, \
-                   avg_sarc_length = MAX_LEN/2, max_sarc_length = MAX_LEN)
+                   avg_sarc_length = max_len/2, max_sarc_length = max_len)
 
     sarcomeres, _ = sg.sarcomere_detection(raw_frames=input_image, sigma=1.0)
     zdiscs = sg.zdisc_segmentation(raw_frames=input_image)
