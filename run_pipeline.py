@@ -9,6 +9,7 @@ from skimage import io
 from pathlib import Path
 import pandas as pd
 import shutil
+import traceback
 
 from src.sarcgraph_analysis import compute_sarcgraph, visualize_sarcgraph
 from src.sarcasm_analysis import compute_sarcasm
@@ -33,6 +34,7 @@ def get_folder_and_date():
         result["folder"] = folder_var.get()
         result["date"] = date_var.get()
         result["save_folder"] = save_folder_var.get()
+        result["num_img_channels"] = num_channels_var.get()
         result["stat_title"] = title_var.get()
         result["plot"] = plot_choice.get() == "Yes"
         result["cols"] = [col for col, var in checkbox_vars.items() if var.get()]
@@ -70,6 +72,11 @@ def get_folder_and_date():
     tk.Label(window, text="Select Save Destination:").pack(pady=(10, 0))
     tk.Button(window, text="Browse", command=lambda: select_folder(save_folder_var)).pack()
     tk.Label(window, textvariable=save_folder_var).pack()
+    
+    # Number Channels input
+    num_channels_var = tk.IntVar(value=4)
+    tk.Label(window, text="Enter Number of Image Channels:").pack(pady=(10, 0))
+    tk.Entry(window, textvariable=num_channels_var).pack()
 
     # Stats sheet title
     title_var = tk.StringVar()
@@ -102,7 +109,7 @@ def get_folder_and_date():
     window.mainloop()
 
     return (result["folder"], result["date"], result["save_folder"],
-            result["stat_title"], result["plot"], result["cols"])
+            result["num_img_channels"], result["stat_title"], result["plot"], result["cols"])
 
 
 def save_specific_files(file_names, original_directory, new_directory):
@@ -124,7 +131,7 @@ def save_specific_files(file_names, original_directory, new_directory):
 
 if __name__ == "__main__":
 
-    data_dir, date, save_folder, stat_title, plot_data, cols_to_plot = get_folder_and_date()
+    data_dir, date, save_folder, num_img_channels, stat_title, plot_data, cols_to_plot = get_folder_and_date()
 
     if date is None: date = 'Output'
 
@@ -144,7 +151,7 @@ if __name__ == "__main__":
             filter_string = 'clust_sg' if both_filters else 'sg'
 
             # Generating Unfiltered Channel 1 (Just Sarcomeres)
-            unfiltered_input = separate_sarc_channel_and_save(data, image_save_path)
+            unfiltered_input = separate_sarc_channel_and_save(data, image_save_path, num_channels=num_img_channels)
 
             # Filtering Images with Custom & SarcGraph
             _, filter_image_path = final_filtering(unfiltered_input, image_save_path, both_filters=both_filters)
@@ -159,15 +166,16 @@ if __name__ == "__main__":
             save_specific_files(['sarcomeres'], f'{image_save_path}_{filter_string}_sarcgraph_output/', save_dir)
             save_specific_files(['sarcomere_mask', 'zbands'], f'{image_save_path}_{filter_string}_filtered/', save_dir)
 
-        except:
-            print(f"Error processing {img}. Skipping this file.")
+        except Exception as e:
+            print(f"Error processing {img}")
+            traceback.print_exc()
             continue
     
     overall_save_directory = f'{save_folder}/{date}-Work'
     data_folders = [os.path.join(overall_save_directory, name) for name in os.listdir(overall_save_directory)
               if os.path.isdir(os.path.join(overall_save_directory, name))]
     print(data_folders)
-    data_statistics = create_statistics_df(original_image_dir=data_dir, folders=data_folders)
+    data_statistics = create_statistics_df(original_image_dir=data_dir, folders=data_folders, num_channels=num_img_channels)
     data_statistics.to_csv(f'{overall_save_directory}/image_analysis_{stat_title}.csv')
 
     if plot_data:

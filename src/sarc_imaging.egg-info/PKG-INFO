@@ -1,0 +1,84 @@
+Metadata-Version: 2.4
+Name: sarc-imaging
+Version: 0.0.0
+Summary: Python scripts to analyze sarcomere images
+Author: David Ntim
+Author-email: Javiera Jilberto <jilberto@umich.edu>
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: numpy>=1.25.2
+Requires-Dist: matplotlib<4.0.0,>=3.10.0
+Requires-Dist: scikit-image>=0.21.0
+Requires-Dist: scikit-learn==1.6.1
+Requires-Dist: packaging==24.0
+Requires-Dist: dask==2025.2.0
+Requires-Dist: pandas<3.0.0,>=2.0.0
+Requires-Dist: networkx<4.0,>=3.2
+Requires-Dist: scipy<2.0,>=1.10.1
+Requires-Dist: trackpy<0.7.0,>=0.6.4
+Requires-Dist: sk-video==1.1.10
+Requires-Dist: sarc-asm==0.1.7
+Requires-Dist: seaborn
+Requires-Dist: nibabel
+
+# sarcomere_imaging
+Sarcomere imaging analysis
+
+# Installation
+1. Create an environment and activate it.
+If using conda:
+```
+conda create -n sarc-env python=3.11
+conda activate sarc-env
+```
+If using venv and on Mac/Linux:
+```
+python -m venv sarc-venv
+source sarc-venv/bin/activate
+```
+If using venv and on Windows:
+```
+python -m venv sarc-venv
+sarc-venv\Scripts\activate
+```
+In VScode you can select the environment by using Ctrl+Shift+P, type Python Select Interpreter and selecting ```./venv/bin/python```.
+
+2. Clone the Repository
+```
+git clone https://github.com/davidnt13/sarcomere_imaging.git
+cd sarcomere_imaging
+```
+
+3. Install necessary packages and modules,
+```
+python -m pip install -e .
+```
+And If Git is installed:
+```
+python -m pip install -r requirements.txt
+```
+But If Git is not Installed:
+i. Go to https://github.com/davidnt13/SarcGraph
+ii. Click the green <> code button and select Download Zip
+iii. cd to the downloaded SarcGraph directory and install in editable mode:
+```
+pip install -e .
+```
+
+
+# Image Analysis Pipeline
+Once in the sarcomere_imaging directory, the main step is running the run_pipeline.py file.
+- This will present a popup window asking for content such as the data (tif images) directory, the date (for organization of files), and whether plots are desired.
+- Input the necessary selections, hit submit, and the code will run, producing the following:
+    - A folder for each image containing:
+        - Sarcomere channel of the image
+        - The filtered image sarcomere channel
+        - Sarcomeres.csv: SarcGraph output of the file (Used for data analysis)
+        - sarcomere_mask.tif: SarcAsM's sarcomere mask of the image
+        - zbands.tif: SarcAsM's z-band mask
+        - {Image Name}_sg_sarcasm_output: Txt file featuring the SarcAsM's analysis for comparison purposes
+    - image_analysis_{stat_title}.csv: Summary Statistics of the Image Data
+    - image_analysis_{stat_title}.png: Plot of the data if desired

@@ -11,7 +11,7 @@ from scipy.ndimage import binary_dilation
 
 # ---------- ISOLATING SARCOMERE CHANNEL ----------
 
-def separate_sarc_channel_and_save(data, save_path):
+def separate_sarc_channel_and_save(data, save_path, num_channels=4):
     if data.ndim != 4:
         data = data[np.newaxis, ...]
         stack_size = 1
@@ -19,7 +19,7 @@ def separate_sarc_channel_and_save(data, save_path):
         stack_size = data.shape[0]
         
     channels_stack = []
-    for channel_index in range(4):
+    for channel_index in range(num_channels):
         channel_data = data[:, :, :, channel_index]
         channel_stack = np.zeros((512, 512, stack_size), dtype=np.uint16)
         for i in range(stack_size):

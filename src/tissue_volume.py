@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import nibabel as nib
 
-def separate_channels_and_save(data, save_path=''):
+def separate_channels_and_save(data, save_path='', num_channels=4):
 
     if data.ndim != 4:
         data = data[np.newaxis, ...]
@@ -13,7 +13,7 @@ def separate_channels_and_save(data, save_path=''):
         stack_size = data.shape[0]
         
     channels_stack = []
-    for channel_index in range(4):
+    for channel_index in range(num_channels):
         channel_data = data[:, :, :, channel_index]
         channel_stack = np.zeros((512, 512, stack_size), dtype=np.uint16)
         for i in range(stack_size):
@@ -26,8 +26,8 @@ def separate_channels_and_save(data, save_path=''):
 
     return channels_stack
 
-def find_tissue_vol(image, thresh_mult=0.1):
-    channels_stack = separate_channels_and_save(image, '')
+def find_tissue_vol(image, thresh_mult=0.1, num_channels=4):
+    channels_stack = separate_channels_and_save(image, '', num_channels=num_channels)
 
     masks = []
     thresh_mults = [0.15, 0.15, 0.1, 0.15]
@@ -81,8 +81,8 @@ def find_myofibril_volume(myofibril_mask):
     print(f"Myofibril volume: {myofibril_vol_microns:.2f} µm³")
     return myofibril_vol_microns
 
-def find_myofibril_density_vol(image, myofibril_mask):
-    total_vol_in_microns = find_tissue_vol(image)
+def find_myofibril_density_vol(image, myofibril_mask, num_channels=4):
+    total_vol_in_microns = find_tissue_vol(image, num_channels=num_channels)
     myofibril_vol_in_microns = find_myofibril_volume(myofibril_mask)
     density = myofibril_vol_in_microns / total_vol_in_microns
 

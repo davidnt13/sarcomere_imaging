@@ -10,7 +10,7 @@ from scipy.stats import linregress
 from tissue_volume import find_myofibril_density_vol
 
 
-def create_statistics_df(original_image_dir, folders, pixel_size=0.312):
+def create_statistics_df(original_image_dir, folders, pixel_size=0.312, num_channels=4):
 
     info_cols = ['Filename', 'Cell Type', 'Fibers', 'Stain', 'Sarcomere Count', 'Mean Length (µm)'
              , 'Mean Angle (Degrees)', 'Stdev Angle (Degrees)', 'Nuclei Count 3D', 'Myofibril Density (Vol)']
@@ -53,12 +53,12 @@ def create_statistics_df(original_image_dir, folders, pixel_size=0.312):
 
         img = io.imread(f'{original_image_dir}/{img_name}.tif')
         nuclei_count_3d = find_and_count_nuclei(img, thresh_mult=thresh_mult, min_distance=min_distance_3d,
-                                                three_dim=True)
+                                                three_dim=True, num_channels=num_channels)
         # print(f'{img_name} 3D Count: {nuclei_count_3d}')
 
         # Z Bands Density
         sarc_mask = io.imread(f'{folder}/sarcomere_mask.tif')
-        myofibril_density_vol = find_myofibril_density_vol(img, sarc_mask)
+        myofibril_density_vol = find_myofibril_density_vol(img, sarc_mask, num_channels=num_channels)
 
         # Store Info
         img_details = [img_name, cell_type, structure, marker, sg_count, 

@@ -96,7 +96,7 @@ def find_nuclei_3d(image, cleaning_size, thresh_mult, cell_radius, min_distance,
 
     return coords
 
-def separate_nuclei_channel_and_save(data, save_path=''):
+def separate_nuclei_channel_and_save(data, save_path='', num_channels=4):
     if data.ndim != 4:
         data = data[np.newaxis, ...]
         stack_size = 1
@@ -104,7 +104,7 @@ def separate_nuclei_channel_and_save(data, save_path=''):
         stack_size = data.shape[0]
         
     channels_stack = []
-    for channel_index in range(4):
+    for channel_index in range(num_channels):
         channel_data = data[:, :, :, channel_index]
         channel_stack = np.zeros((512, 512, stack_size), dtype=np.uint16)
         for i in range(stack_size):
@@ -117,8 +117,9 @@ def separate_nuclei_channel_and_save(data, save_path=''):
 
     return channel_0
 
-def find_and_count_nuclei(image, min_distance=10, save_file='', three_dim = False, thresh_mult=1.5, cell_radius=15, show_image=True, save_coords = False):
-    image = separate_nuclei_channel_and_save(image, '')
+def find_and_count_nuclei(image, min_distance=10, save_file='', three_dim = False, thresh_mult=1.5, cell_radius=15, show_image=True, save_coords = False,
+    num_channels=4):
+    image = separate_nuclei_channel_and_save(image, '', num_channels)
 
     cleaning_size = cell_radius // 3
 
